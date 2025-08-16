@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>xs.badyanov</groupId>
 	<artifactId>onec-logerr</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>2025.08.01-SNAPSHOT</version>
 	<name>OneC LogErr</name>
 	<description>Errors Journal for 1C:Enterprise</description>
 	<url/>
