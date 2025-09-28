@@ -1,0 +1,271 @@
+@startuml OneC_LogErr Entity Classes
+
+header xs.badyanov.onec_logerr.entity
+
+'=== Entity ===
+
+class OneCError {
+    <<Entity>>
+    --
+    -Long id <<PK>>
+    -String errorId <<Unique>>
+    -Instant time /' Время в формате Unix time '/
+    -ClientInfo clientInfo <<FK>>
+    -SessionInfo sessionInfo <<FK>>
+    -InfoBaseInfo infoBaseInfo <<FK>>
+    -ServerInfo serverInfo <<FK>>
+    -ConfigInfo configInfo <<FK>>
+    -ErrorInfo errorInfo <<FK>>
+    -BinaryFile screenshot <<FK, Nullable>>
+    -String additionalData /' дополнительные данные в формате JSON '/
+    -List<BinaryFile> additionalFiles <<OneToMany>>
+    -Dump dump <<FK, Nullable>>
+    --
+    +OneCError()
+    +getters()
+    +setters()
+}
+
+class ClientInfo {
+    <<Entity>>
+    --
+    -Long id <<PK>>
+    -String platformType /' Свойство 'СистемнаяИнформация.ТипПлатформы' в английском варианте написания '/
+    -String appVersion /' Свойство 'СистемнаяИнформация.ВерсияПриложения' '/
+    -String appName /' Метод ИмяПриложения(). Также может быть BackgroundJob или HTTPServiceConnection '/
+    -SystemInfo systemInfo <<FK>>
+    --
+    +ClientInfo()
+    +getters()
+    +setters()
+}
+
+class SystemInfo {
+    <<Entity>>
+    --
+    -Long id <<PK>>
+    -String osVersion /' Свойство 'СистемнаяИнформация.ВерсияОС' '/
+    -Long fullRAM /' Всего оперативной памяти '/
+    -Long freeRAM /' Свободно оперативной памяти '/
+    -String processor /' Свойство 'СистемнаяИнформация.Процессор' '/
+    -String useragent /' user-agent текущего веб-браузера (свойство 'СистемнаяИнформация.ИнформацияПрограммыПросмотра') '/
+    -String clientID /' Свойство 'СистемнаяИнформация.ИдентификаторКлиента' '/
+    --
+    +SystemInfo()
+    +getters()
+    +setters()
+}
+
+class SessionInfo {
+    <<Entity>>
+    --
+    -Long id <<PK>>
+    -String userName
+    -String dataSeparation /' Значения разделителей текущего сеанса '/
+    -String platformInterfaceLanguageCode /' Строка с кодом языка интерфейса '/
+    -String configurationInterfaceLanguageCode /' Строка с кодом языка конфигурации для текущего пользователя '/
+    -String localeCode /' Строка с кодом локализации сеанса (метод ТекущийКодЛокализации()) '/
+    --
+    +SessionInfo()
+    +getters()
+    +setters()
+}
+
+class InfoBaseInfo {
+    <<Entity>>
+    --
+    -Long id <<PK>>
+    -String localeCode /' Строка с кодом локализации информационной базы (метод КодЛокализацииИнформационнойБазы()) '/
+    --
+    +InfoBaseInfo()
+    +getters()
+    +setters()
+}
+
+class ServerInfo {
+    <<Entity>>
+    --
+    -Long id <<PK>>
+    -String platformType /' Свойство 'СистемнаяИнформация.ТипПлатформы' в английском варианте написания '/
+    -String appVersion /' Версия кластера серверов (в виде строки) (свойство 'СистемнаяИнформация.ВерсияПриложения') '/
+    -String dbms /' Тип СУБД '/
+    --
+    +ServerInfo()
+    +getters()
+    +setters()
+}
+
+class ConfigInfo {
+    <<Entity>>
+    --
+    -Long id <<PK>>
+    -String name
+    -String description
+    -String version
+    -String compatibilityMode /' Режим совместимости конфигурации (свойство РежимСовместимости) '/
+    -String hash /' Хеш конфигурации (в формате MD5) '/
+    -Boolean changeEnabled /' Возможность изменения конфигурации '/
+    -List<Extension> extensions
+    -List<Extension> disabledExtensions
+    --
+    +ConfigInfo()
+    +getters()
+    +setters()
+}
+
+class ErrorInfo {
+    <<Entity>>
+    --
+    -Long id <<PK>>
+    -String userDescription /' Описание, написанное пользователем. Отсутствует, если отчет об ошибке сформирован на сервере. '/
+    -SystemErrorInfo systemErrorInfo <<FK>> /' Информация об ошибке, относящаяся к платформе «1С:Предприятие» '/
+    -ApplicationErrorInfo applicationErrorInfo <<FK>> /' Информация об ошибке, относящаяся к прикладному решению '/
+    --
+    +ErrorInfo()
+    +getters()
+    +setters()
+}
+
+class SystemErrorInfo {
+    <<Entity>>
+    --
+    -Long id <<PK>>
+    -String clientStack /' Текст стека клиентского приложения. Отсутствует, если отчет об ошибке сформирован на сервере '/
+    -String clientStackHash /' Хеш текста стека клиентского приложения в формате MD5 '/
+    -String serverStack /' Текст стека кластера серверов '/
+    -String serverStackHash /' Хеш текста стека кластера серверов в формате MD5 '/
+    -Boolean systemCrash /' Признак того, что отчет об ошибке формируется в результате аварийного завершения работы клиентского приложения '/
+    --
+    +SystemErrorInfo()
+    +getters()
+    +setters()
+}
+
+class ApplicationErrorInfo {
+    <<Entity>>
+    --
+    -Long id <<PK>>
+    -List<ErrorDescription> errors <<ElementCollection>>
+    -List<StackDescription> stack <<ElementCollection>>
+    -String stackHash
+    --
+    +ApplicationErrorInfo()
+    +getters()
+    +setters()
+}
+
+class BinaryFile {
+    <<Entity>>
+    --
+    -Long id <<PK>>
+    -String storagePath <<Unique>> /' Путь к файлу в хранилище '/
+    -String originalFileName /' имя файла '/
+    -Long fileSize
+    -String mimeType
+    --
+    +BinaryFile()
+    +getters()
+    +setters()
+}
+
+class Dump {
+    <<Entity>>
+    --
+    -Long id <<PK>>
+    -String type /' тип дампа (аналогичен значению атрибута type элемента dump файла logcfg.xml) '/
+    -String reasonForNoDump /' причина, по которой дамп не сформирован: genericFailure, userRefused, insufficientResources '/
+    -BinaryFile file <<FK>>
+    --
+    +Dump()
+    +getters()
+    +setters()
+}
+
+class Extension {
+    <<Entity>>
+    --
+    -Long id <<PK>>
+    -String name
+    -String hash
+    --
+    +Extension()
+    +getters()
+    +setters()
+}
+
+class ErrorDescription {
+    <<Embeddable, Record>>
+    --
+    -String description
+    -String category
+}
+
+class StackDescription {
+    <<Embeddable, Record>>
+    --
+    -String moduleName /' Имя модуля '/
+    -Integer lineNumber /' Номер строки '/
+    -String lineContent /' Содержимое строки кода '/
+}
+
+'=== Relationships ===
+
+OneCError "1" *-- "1" ClientInfo : "clientInfo"
+OneCError "1" *-- "1" SessionInfo : "sessionInfo"
+OneCError "1" *-- "1" InfoBaseInfo : "infoBaseInfo"
+OneCError "1" *-- "1" ServerInfo : "serverInfo"
+OneCError "1" *-- "1" ConfigInfo : "configInfo"
+OneCError "1" *-- "1" ErrorInfo : "errorInfo"
+OneCError "1" *-- "0..1" BinaryFile : "screenshot"
+OneCError "1" *-- "0..*" BinaryFile : "additionalFiles"
+OneCError "1" *-- "0..1" Dump : "dump"
+
+ErrorInfo "1" *-- "1" SystemErrorInfo : "systemErrorInfo"
+ErrorInfo "1" *-- "1" ApplicationErrorInfo : "applicationErrorInfo"
+
+ClientInfo "1" *-- "1" SystemInfo : "systemInfo"
+
+ApplicationErrorInfo o-- "*" ErrorDescription
+ApplicationErrorInfo o-- "*" StackDescription
+
+Dump "1" *-- "0..1" BinaryFile : "file"
+
+ConfigInfo "1" o-- "0..*" Extension : "extensions"
+ConfigInfo "1" o-- "0..*" Extension : "disabledExtensions"
+
+'=== STYLING ===
+
+' General
+skinparam handwritten false
+skinparam shadowing true
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 12
+skinparam roundcorner 10
+
+' Colors
+!define ENTITY_BG #E8F5E9
+!define ENTITY_BORDER #4CAF50
+!define EMBEDDABLE_BG #E0F7FA
+!define EMBEDDABLE_BORDER #00BCD4
+!define PK_BG #FFEBEE
+!define FK_BG #FFFDE7
+
+' Arrow color
+skinparam ArrowColor ENTITY_BORDER
+
+' Stereotypes
+skinparam class<<Entity>> {
+    BackgroundColor ENTITY_BG
+    BorderColor ENTITY_BORDER
+}
+skinparam class<<Embeddable>> {
+    BackgroundColor EMBEDDABLE_BG
+    BorderColor EMBEDDABLE_BORDER
+}
+
+skinparam classAttributeStereotype<<PK>>BackgroundColor PK_BG
+skinparam classAttributeStereotype<<FK>>BackgroundColor FK_BG
+skinparam classAttributeStereotype<<Nullable>>FontColor #757575
+skinparam classAttributeStereotype<<Nullable>>FontStyle italic
+
+@enduml
