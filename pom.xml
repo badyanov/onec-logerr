@@ -5,29 +5,34 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.4</version>
+		<version>3.5.6</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>xs.badyanov</groupId>
 	<artifactId>onec-logerr</artifactId>
-	<version>2025.08.01-SNAPSHOT</version>
+	<version>2025.09.01-SNAPSHOT</version>
 	<name>OneC LogErr</name>
 	<description>Errors Journal for 1C:Enterprise</description>
-	<url/>
+	<url>https://github.com/badyanov/onec-logerr</url>
 	<licenses>
 		<license/>
 	</licenses>
 	<developers>
-		<developer/>
+		<developer>
+			<name>Dmitriy Badyanov</name>
+			<email>d.badyanov@outlook.com</email>
+			<organization>XS</organization>
+		</developer>
 	</developers>
 	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
+		<connection>scm:git:git://github.com/badyanov/onec-logerr.git</connection>
+		<developerConnection>scm:git:ssh://github.com:badyanov/onec-logerr.git</developerConnection>
+		<tag>HEAD</tag>
+		<url>https://github.com/badyanov/onec-logerr</url>
 	</scm>
 	<properties>
-		<java.version>21</java.version>
+		<java.version>25</java.version>
+		<commons-compress.version>1.27.1</commons-compress.version>
 	</properties>
 	<dependencies>
 		<dependency>
