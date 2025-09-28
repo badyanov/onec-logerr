@@ -7,54 +7,48 @@ import java.util.List;
 @Entity
 @Table(name = "onec_errors")
 public class OneCError {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column(name = "error_id", unique = true, nullable = false)
     private String errorId;
-    
+
     @Column(name = "time", nullable = false)
     private Instant time;
-    
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "client_info_id")
+
+    @Embedded
     private ClientInfo clientInfo;
-    
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "session_info_id")
+
+    @Embedded
     private SessionInfo sessionInfo;
-    
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "info_base_info_id")
+
+    @Embedded
     private InfoBaseInfo infoBaseInfo;
-    
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "server_info_id")
+
+    @Embedded
     private ServerInfo serverInfo;
-    
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "config_info_id")
+
+    @Embedded
     private ConfigInfo configInfo;
-    
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "error_info_id")
+
+    @Embedded
     private ErrorInfo errorInfo;
-    
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "screenshot_file_id")
     private BinaryFile screenshot;
-    
+
     @Column(name = "additional_data", columnDefinition = "TEXT")
     private String additionalData;
-    
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "onec_error_additional_files",
                joinColumns = @JoinColumn(name = "onec_error_id"),
                inverseJoinColumns = @JoinColumn(name = "binary_file_id"))
     private List<BinaryFile> additionalFiles;
-    
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "dump_id")
     private Dump dump;
