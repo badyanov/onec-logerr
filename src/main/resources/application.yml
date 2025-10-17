@@ -9,8 +9,8 @@ spring:
   # Database Configuration
   datasource:
     url: jdbc:postgresql://localhost:5432/onec_logerr
-    username: postgres
-    password: password
+    username: "onec_user"
+    password: "********"
     driver-class-name: org.postgresql.Driver
   
   # JPA Configuration
