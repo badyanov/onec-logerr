@@ -10,12 +10,12 @@ class OneCError {
     -Long id <<PK>>
     -String errorId <<Unique>>
     -Instant time /' Время в формате Unix time '/
-    -ClientInfo clientInfo <<FK>>
-    -SessionInfo sessionInfo <<FK>>
-    -InfoBaseInfo infoBaseInfo <<FK>>
-    -ServerInfo serverInfo <<FK>>
-    -ConfigInfo configInfo <<FK>>
-    -ErrorInfo errorInfo <<FK>>
+    -ClientInfo clientInfo <<Embedded>>
+    -SessionInfo sessionInfo <<Embedded>>
+    -InfoBaseInfo infoBaseInfo <<Embedded>>
+    -ServerInfo serverInfo <<Embedded>>
+    -ConfigInfo configInfo <<Embedded>>
+    -ErrorInfo errorInfo <<Embedded>>
     -BinaryFile screenshot <<FK, Nullable>>
     -String additionalData /' дополнительные данные в формате JSON '/
     -List<BinaryFile> additionalFiles <<OneToMany>>
@@ -27,13 +27,12 @@ class OneCError {
 }
 
 class ClientInfo {
-    <<Entity>>
+    <<Embeddable>>
     --
-    -Long id <<PK>>
     -String platformType /' Свойство 'СистемнаяИнформация.ТипПлатформы' в английском варианте написания '/
     -String appVersion /' Свойство 'СистемнаяИнформация.ВерсияПриложения' '/
     -String appName /' Метод ИмяПриложения(). Также может быть BackgroundJob или HTTPServiceConnection '/
-    -SystemInfo systemInfo <<FK>>
+    -SystemInfo systemInfo <<Embedded>>
     --
     +ClientInfo()
     +getters()
@@ -41,9 +40,8 @@ class ClientInfo {
 }
 
 class SystemInfo {
-    <<Entity>>
+    <<Embeddable>>
     --
-    -Long id <<PK>>
     -String osVersion /' Свойство 'СистемнаяИнформация.ВерсияОС' '/
     -Long fullRAM /' Всего оперативной памяти '/
     -Long freeRAM /' Свободно оперативной памяти '/
@@ -57,9 +55,8 @@ class SystemInfo {
 }
 
 class SessionInfo {
-    <<Entity>>
+    <<Embeddable>>
     --
-    -Long id <<PK>>
     -String userName
     -String dataSeparation /' Значения разделителей текущего сеанса '/
     -String platformInterfaceLanguageCode /' Строка с кодом языка интерфейса '/
@@ -72,9 +69,8 @@ class SessionInfo {
 }
 
 class InfoBaseInfo {
-    <<Entity>>
+    <<Embeddable>>
     --
-    -Long id <<PK>>
     -String localeCode /' Строка с кодом локализации информационной базы (метод КодЛокализацииИнформационнойБазы()) '/
     --
     +InfoBaseInfo()
@@ -83,9 +79,8 @@ class InfoBaseInfo {
 }
 
 class ServerInfo {
-    <<Entity>>
+    <<Embeddable>>
     --
-    -Long id <<PK>>
     -String platformType /' Свойство 'СистемнаяИнформация.ТипПлатформы' в английском варианте написания '/
     -String appVersion /' Версия кластера серверов (в виде строки) (свойство 'СистемнаяИнформация.ВерсияПриложения') '/
     -String dbms /' Тип СУБД '/
@@ -96,17 +91,16 @@ class ServerInfo {
 }
 
 class ConfigInfo {
-    <<Entity>>
+    <<Embeddable>>
     --
-    -Long id <<PK>>
     -String name
     -String description
     -String version
     -String compatibilityMode /' Режим совместимости конфигурации (свойство РежимСовместимости) '/
     -String hash /' Хеш конфигурации (в формате MD5) '/
     -Boolean changeEnabled /' Возможность изменения конфигурации '/
-    -List<Extension> extensions
-    -List<Extension> disabledExtensions
+    -List<Extension> extensions <<ElementCollection>>
+    -List<Extension> disabledExtensions <<ElementCollection>>
     --
     +ConfigInfo()
     +getters()
@@ -114,12 +108,11 @@ class ConfigInfo {
 }
 
 class ErrorInfo {
-    <<Entity>>
+    <<Embeddable>>
     --
-    -Long id <<PK>>
     -String userDescription /' Описание, написанное пользователем. Отсутствует, если отчет об ошибке сформирован на сервере. '/
-    -SystemErrorInfo systemErrorInfo <<FK>> /' Информация об ошибке, относящаяся к платформе «1С:Предприятие» '/
-    -ApplicationErrorInfo applicationErrorInfo <<FK>> /' Информация об ошибке, относящаяся к прикладному решению '/
+    -SystemErrorInfo systemErrorInfo <<Embedded>> /' Информация об ошибке, относящаяся к платформе «1С:Предприятие» '/
+    -ApplicationErrorInfo applicationErrorInfo <<Embedded>> /' Информация об ошибке, относящаяся к прикладному решению '/
     --
     +ErrorInfo()
     +getters()
@@ -127,9 +120,8 @@ class ErrorInfo {
 }
 
 class SystemErrorInfo {
-    <<Entity>>
+    <<Embeddable>>
     --
-    -Long id <<PK>>
     -String clientStack /' Текст стека клиентского приложения. Отсутствует, если отчет об ошибке сформирован на сервере '/
     -String clientStackHash /' Хеш текста стека клиентского приложения в формате MD5 '/
     -String serverStack /' Текст стека кластера серверов '/
@@ -142,9 +134,8 @@ class SystemErrorInfo {
 }
 
 class ApplicationErrorInfo {
-    <<Entity>>
+    <<Embeddable>>
     --
-    -Long id <<PK>>
     -List<ErrorDescription> errors <<ElementCollection>>
     -List<StackDescription> stack <<ElementCollection>>
     -String stackHash
@@ -182,9 +173,8 @@ class Dump {
 }
 
 class Extension {
-    <<Entity>>
+    <<Embeddable>>
     --
-    -Long id <<PK>>
     -String name
     -String hash
     --
@@ -210,28 +200,18 @@ class StackDescription {
 
 '=== Relationships ===
 
-OneCError "1" *-- "1" ClientInfo : "clientInfo"
-OneCError "1" *-- "1" SessionInfo : "sessionInfo"
-OneCError "1" *-- "1" InfoBaseInfo : "infoBaseInfo"
-OneCError "1" *-- "1" ServerInfo : "serverInfo"
-OneCError "1" *-- "1" ConfigInfo : "configInfo"
-OneCError "1" *-- "1" ErrorInfo : "errorInfo"
+' OneCError has direct relationships with other Entities
 OneCError "1" *-- "0..1" BinaryFile : "screenshot"
 OneCError "1" *-- "0..*" BinaryFile : "additionalFiles"
 OneCError "1" *-- "0..1" Dump : "dump"
-
-ErrorInfo "1" *-- "1" SystemErrorInfo : "systemErrorInfo"
-ErrorInfo "1" *-- "1" ApplicationErrorInfo : "applicationErrorInfo"
-
-ClientInfo "1" *-- "1" SystemInfo : "systemInfo"
-
-ApplicationErrorInfo o-- "*" ErrorDescription
-ApplicationErrorInfo o-- "*" StackDescription
-
 Dump "1" *-- "0..1" BinaryFile : "file"
 
-ConfigInfo "1" o-- "0..*" Extension : "extensions"
-ConfigInfo "1" o-- "0..*" Extension : "disabledExtensions"
+' Element Collections are represented as aggregations
+ConfigInfo o-- "0..*" Extension : "extensions"
+ConfigInfo o-- "0..*" Extension : "disabledExtensions"
+ApplicationErrorInfo o-- "*" ErrorDescription : "errors"
+ApplicationErrorInfo o-- "*" StackDescription : "stack"
+
 
 '=== STYLING ===
 
@@ -247,6 +227,7 @@ skinparam roundcorner 10
 !define ENTITY_BORDER #4CAF50
 !define EMBEDDABLE_BG #E0F7FA
 !define EMBEDDABLE_BORDER #00BCD4
+!define EMBEDDED_BG #FFF9C4
 !define PK_BG #FFEBEE
 !define FK_BG #FFFDE7
 
@@ -262,9 +243,15 @@ skinparam class<<Embeddable>> {
     BackgroundColor EMBEDDABLE_BG
     BorderColor EMBEDDABLE_BORDER
 }
+skinparam class<<Record>> {
+    BackgroundColor EMBEDDABLE_BG
+    BorderColor EMBEDDABLE_BORDER
+}
 
 skinparam classAttributeStereotype<<PK>>BackgroundColor PK_BG
 skinparam classAttributeStereotype<<FK>>BackgroundColor FK_BG
+skinparam classAttributeStereotype<<Embedded>>BackgroundColor EMBEDDED_BG
+skinparam classAttributeStereotype<<ElementCollection>>BackgroundColor EMBEDDED_BG
 skinparam classAttributeStereotype<<Nullable>>FontColor #757575
 skinparam classAttributeStereotype<<Nullable>>FontStyle italic
 
