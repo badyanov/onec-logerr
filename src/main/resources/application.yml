@@ -4,7 +4,7 @@ spring:
   
   # Server Configuration
   server:
-    port: 8080
+    port: 80
   
   # Database Configuration
   datasource:
@@ -32,10 +32,6 @@ spring:
 # Logging Configuration
 logging:
   level:
-    org:
-      hibernate:
-        SQL: DEBUG
-        type:
-          descriptor:
-            sql:
-              BasicBinder: TRACE
+    root: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.SQL.type.descriptor.sql.BasicBinder: TRACE
