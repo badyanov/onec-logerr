@@ -1,8 +1,11 @@
 package xs.badyanov.onec_logerr.entity;
 
 import jakarta.persistence.*;
+
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "onec_errors")
@@ -13,7 +16,7 @@ public class OneCError {
     private Long id;
 
     @Column(name = "error_id", unique = true, nullable = false)
-    private String errorId;
+    private UUID errorId;
 
     @Column(name = "time", nullable = false)
     private Instant time;
@@ -45,8 +48,8 @@ public class OneCError {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "onec_error_additional_files",
-               joinColumns = @JoinColumn(name = "onec_error_id"),
-               inverseJoinColumns = @JoinColumn(name = "binary_file_id"))
+            joinColumns = @JoinColumn(name = "onec_error_id"),
+            inverseJoinColumns = @JoinColumn(name = "binary_file_id"))
     private List<BinaryFile> additionalFiles;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -60,7 +63,8 @@ public class OneCError {
     private Instant updatedAt;
 
     // Конструкторы
-    public OneCError() {}
+    public OneCError() {
+    }
 
     // Callback-методы JPA lifecycle
     @PrePersist
@@ -83,11 +87,11 @@ public class OneCError {
         this.id = id;
     }
 
-    public String getErrorId() {
+    public UUID getErrorId() {
         return errorId;
     }
 
-    public void setErrorId(String errorId) {
+    public void setErrorId(UUID errorId) {
         this.errorId = errorId;
     }
 
@@ -187,4 +191,15 @@ public class OneCError {
         return updatedAt;
     }
 
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof OneCError oneCError)) return false;
+
+        return Objects.equals(id, oneCError.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

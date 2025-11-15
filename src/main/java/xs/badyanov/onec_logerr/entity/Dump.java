@@ -3,15 +3,16 @@ package xs.badyanov.onec_logerr.entity;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.util.Objects;
 
 @Entity
 @Table(name = "dumps")
 public class Dump {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column(name = "type")
     private String type;
 
@@ -29,7 +30,8 @@ public class Dump {
     private Instant updatedAt;
 
     // Конструкторы
-    public Dump() {}
+    public Dump() {
+    }
 
     // Callback-методы JPA lifecycle
     @PrePersist
@@ -84,4 +86,15 @@ public class Dump {
         return updatedAt;
     }
 
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof Dump dump)) return false;
+
+        return Objects.equals(id, dump.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

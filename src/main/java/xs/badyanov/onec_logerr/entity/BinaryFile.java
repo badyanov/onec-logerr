@@ -3,6 +3,7 @@ package xs.badyanov.onec_logerr.entity;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.util.Objects;
 
 @Entity
 @Table(name = "binary_files")
@@ -93,5 +94,17 @@ public class BinaryFile {
 
     public Instant getUpdatedAt() {
         return updatedAt;
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof BinaryFile that)) return false;
+
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }
