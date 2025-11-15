@@ -1,10 +1,10 @@
+# Server Configuration
+server:
+  port: 80
+
 spring:
   application:
     name: OneC LogErr
-  
-  # Server Configuration
-  server:
-    port: 80
   
   # Database Configuration
   datasource:
