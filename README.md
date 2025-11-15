@@ -9,7 +9,7 @@
 
 ## Технологии
 
-- **Spring Boot 3.6.0**
+- **Spring Boot 3.5.7**
 - **Spring Data JPA**
 - **PostgreSQL**
 - **Flyway** (миграции БД)
@@ -24,9 +24,15 @@
 Создайте базу данных PostgreSQL:
 
 ```sql
-CREATE DATABASE onec_logerr;
 CREATE USER onec_user WITH PASSWORD 'your_password';
+CREATE DATABASE onec_logerr;
 GRANT ALL PRIVILEGES ON DATABASE onec_logerr TO onec_user;
+```
+
+Затем, необходимо подключиться к созданной базе данных и выполнить следующий скрипт:
+
+```sql
+GRANT ALL ON SCHEMA public TO onec_user;
 ```
 
 ### 2. Конфигурация
