@@ -16,7 +16,7 @@ CREATE TABLE dumps (
     id BIGSERIAL PRIMARY KEY,
     type VARCHAR(50),                          -- тип дампа (mini, full)
     reason_for_no_dump VARCHAR(100),           -- причина, по которой дамп не сформирован
-    file_id BIGINT REFERENCES binary_files(id), -- Ссылка на файл дампа
+    binary_file_id BIGINT REFERENCES binary_files(id), -- Ссылка на файл дампа
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -24,7 +24,7 @@ CREATE TABLE dumps (
 -- Основная таблица ошибок, включающая все вложенные данные
 CREATE TABLE onec_errors (
     id BIGSERIAL PRIMARY KEY,
-    error_id VARCHAR(255) NOT NULL UNIQUE,
+    error_id UUID NOT NULL UNIQUE,
     time TIMESTAMP NOT NULL,
 
     -- Поля из ClientInfo и SystemInfo

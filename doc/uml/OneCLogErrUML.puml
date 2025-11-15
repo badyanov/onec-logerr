@@ -8,7 +8,7 @@ class OneCError {
     <<Entity>>
     --
     -Long id <<PK>>
-    -String errorId <<Unique>>
+    -UUID errorId <<Unique>>
     -Instant time /' Время в формате Unix time '/
     -ClientInfo clientInfo <<Embedded>>
     -SessionInfo sessionInfo <<Embedded>>
