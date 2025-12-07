@@ -1,11 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru" layout:decorate="~{layouts/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
   <meta charset="UTF-8">
   <title>OneC LogErr</title>
 </head>
+
 <body>
 
-<p>OneC LogErr!</p>
+<section layout:fragment="content">
+  <div class="container">
+    <h1 class="mt-5">Добро пожаловать!</h1>
+    <p>Это главная страница приложения <strong>OneC LogErr</strong></p>
+  </div>
+</section>
+
 </body>
 </html>
