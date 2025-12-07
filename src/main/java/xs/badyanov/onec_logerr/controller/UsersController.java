@@ -27,9 +27,9 @@ public class UsersController {
     }
 
     @GetMapping("/users")
-    public String listUsers(@RequestParam(value = "keyword", required = false) String keyword,
-                            RedirectAttributes redirectAttributes,
-                            Model model) {
+    public String getUsers(@RequestParam(value = "keyword", required = false) String keyword,
+                           RedirectAttributes redirectAttributes,
+                           Model model) {
 
         logger.debug("Обработка запроса GET /users с отбором: {}", keyword);
 
