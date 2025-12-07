@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import xs.badyanov.onec_logerr.converters.UserConverter;
 import xs.badyanov.onec_logerr.dto.UserDto;
 import xs.badyanov.onec_logerr.entity.AppUser;
-import xs.badyanov.onec_logerr.repository.UserRepository;
+import xs.badyanov.onec_logerr.repository.UsersRepository;
 
 import java.util.List;
 
@@ -20,12 +20,12 @@ public class UsersService {
     private static final Logger logger = LoggerFactory.getLogger(UsersService.class);
 
     private final PasswordEncoder passwordEncoder;
-    private final UserRepository userRepository;
+    private final UsersRepository usersRepository;
 
     @Autowired
-    public UsersService(PasswordEncoder passwordEncoder, UserRepository userRepository) {
+    public UsersService(PasswordEncoder passwordEncoder, UsersRepository usersRepository) {
         this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
+        this.usersRepository = usersRepository;
     }
 
     public String encryptPassword(String password) {
@@ -35,7 +35,7 @@ public class UsersService {
     @Transactional(readOnly = true)
     public List<UserDto> findAll() {
         logger.debug("Поиск всех пользователей в базе данных, сортировка по полю ID");
-        List<AppUser> users = userRepository.findAll(Sort.by("id").ascending());
+        List<AppUser> users = usersRepository.findAll(Sort.by("id").ascending());
         logger.debug("Найдено {} пользователей", users.size());
         return users.stream().map(UserConverter::toDto).toList();
     }
@@ -43,7 +43,7 @@ public class UsersService {
     @Transactional(readOnly = true)
     public List<UserDto> search(String keyword) {
         logger.debug("Поиск пользователей по отбору: '{}'", keyword);
-        List<AppUser> users = userRepository.search(keyword, Sort.by("id").ascending());
+        List<AppUser> users = usersRepository.search(keyword, Sort.by("id").ascending());
         logger.debug("Найдено {} пользователей по отбору '{}'", users.size(), keyword);
         return users.stream().map(UserConverter::toDto).toList();
     }

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xs.badyanov.onec_logerr.entity.AppUser;
 import xs.badyanov.onec_logerr.entity.UserRoles;
-import xs.badyanov.onec_logerr.repository.UserRepository;
+import xs.badyanov.onec_logerr.repository.UsersRepository;
 
 @Service
 public class FirstStartService {
@@ -16,18 +16,18 @@ public class FirstStartService {
     private static final String DEFAULT_USERNAME = "admin";
     private static final String DEFAULT_PASSWORD = "password";
 
-    private final UserRepository userRepository;
+    private final UsersRepository usersRepository;
     private final UsersService usersService;
 
     @Autowired
-    public FirstStartService(UserRepository userRepository, UsersService usersService) {
-        this.userRepository = userRepository;
+    public FirstStartService(UsersRepository usersRepository, UsersService usersService) {
+        this.usersRepository = usersRepository;
         this.usersService = usersService;
     }
 
     public boolean isFirstStart() {
         logger.debug("Проверка наличия пользователей в базе данных...");
-        return userRepository.count() == 0;
+        return usersRepository.count() == 0;
     }
 
     @Transactional
@@ -37,7 +37,7 @@ public class FirstStartService {
         try {
             AppUser firstAdminUser = new AppUser("admin", UserRoles.ROLE_ADMINISTRATOR);
             firstAdminUser.setPassword(usersService.encryptPassword(DEFAULT_PASSWORD));
-            userRepository.saveAndFlush(firstAdminUser);
+            usersRepository.saveAndFlush(firstAdminUser);
 
             logger.info("Создан пользователь: {}; Пароль: {}. Рекомендуется сменить пароль после входа в систему!",
                     DEFAULT_USERNAME, DEFAULT_PASSWORD);

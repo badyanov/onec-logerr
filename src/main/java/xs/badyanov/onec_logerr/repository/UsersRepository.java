@@ -8,7 +8,7 @@ import xs.badyanov.onec_logerr.entity.AppUser;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<AppUser, Long> {
+public interface UsersRepository extends JpaRepository<AppUser, Long> {
 
     Optional<AppUser> findByUsernameIgnoreCase(String username);
 
