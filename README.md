@@ -9,7 +9,7 @@
 
 ## Технологии
 
-- **Spring Boot 3.5.7**
+- **Spring Boot 3.5.8**
 - **Spring Data JPA**
 - **PostgreSQL**
 - **Flyway** (миграции БД)
@@ -37,7 +37,7 @@ GRANT ALL ON SCHEMA public TO onec_user;
 
 ### 2. Конфигурация
 
-Отредактируйте `src/main/resources/application.yml`:
+Отредактируйте `src/main/resources/application.yaml`:
 
 ```yaml
 spring:
@@ -51,11 +51,13 @@ server:
   port: 8080
 ```
 
+Образец файла `application.yaml` смотрите в конце этой страницы
+
 #### Настройка порта
 
 Приложение по умолчанию запускается на порту **8080**. Для изменения порта:
 
-**Вариант 1:** Измените в `application.yml`:
+**Вариант 1:** Измените в `application.yaml`:
 
 ```yaml
 server:
@@ -123,8 +125,53 @@ mvn spring-boot:run
 
 ## UML диаграмма
 
-UML диаграмма классов доступна в файле `doc/uml/design.puml`.
+UML диаграмма классов доступна в файле [doc/uml/OneCLogErrUML.puml](doc/uml/OneCLogErrUML.puml)](doc/uml/design.puml).
+
+Описание структуры данных приложения доступно в документации к
+платформе [https://its.1c.eu/db/v8327doc#bookmark:dev:TI000002262](Глава 31.3.6 - Отчет об ошибке (8.3.27))
 
 ## API Endpoints
 
 todo...
+
+## Образец файла `application.yaml`
+
+```yaml
+# Server Configuration
+server:
+  port: 80
+
+spring:
+  application:
+    name: OneC LogErr
+
+  # Database Configuration
+  datasource:
+    url: jdbc:postgresql://localhost:5432/onec_logerr
+    username: "onec_user"
+    password: "********"
+    driver-class-name: org.postgresql.Driver
+
+  # JPA Configuration
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  # Flyway Configuration
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+# Logging Configuration
+logging:
+  level:
+    root: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.SQL.type.descriptor.sql.BasicBinder: TRACE
+```
