@@ -17,12 +17,12 @@ public class FirstStartService {
     private static final String DEFAULT_PASSWORD = "password";
 
     private final UserRepository userRepository;
-    private final UserService userService;
+    private final UsersService usersService;
 
     @Autowired
-    public FirstStartService(UserRepository userRepository, UserService userService) {
+    public FirstStartService(UserRepository userRepository, UsersService usersService) {
         this.userRepository = userRepository;
-        this.userService = userService;
+        this.usersService = usersService;
     }
 
     public boolean isFirstStart() {
@@ -36,7 +36,7 @@ public class FirstStartService {
 
         try {
             AppUser firstAdminUser = new AppUser("admin", UserRoles.ROLE_ADMINISTRATOR);
-            firstAdminUser.setPassword(userService.encryptPassword(DEFAULT_PASSWORD));
+            firstAdminUser.setPassword(usersService.encryptPassword(DEFAULT_PASSWORD));
             userRepository.saveAndFlush(firstAdminUser);
 
             logger.info("Создан пользователь: {}; Пароль: {}. Рекомендуется сменить пароль после входа в систему!",
