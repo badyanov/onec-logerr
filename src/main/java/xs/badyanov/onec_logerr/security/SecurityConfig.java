@@ -15,11 +15,11 @@ public class SecurityConfig {
     SecurityFilterChain config(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .authorizeHttpRequests(http -> http
-                        // Статичные ресурсы и страница ошибок
-                        .requestMatchers("/error", "/css/**", "/webjars/**", "/png/**", "/favicon.ico").permitAll()
+                        // Статичные ресурсы
+                        .requestMatchers("/css/**", "/webjars/**", "/png/**", "/favicon.ico").permitAll()
 
                         // Ресурсы только для администратора
-                        .requestMatchers("/users/**").hasAuthority("ROLE_ADMINISTRATOR")
+                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMINISTRATOR")
 
                         // Главная страница и все остальные страницы
                         .requestMatchers("/**").authenticated()
