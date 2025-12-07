@@ -12,7 +12,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "users")
-public class Users {
+public class AppUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,7 +46,12 @@ public class Users {
     private Instant updatedAt;
 
     // Конструкторы
-    public Users() {
+    public AppUser() {
+    }
+
+    public AppUser(String username, UserRoles role) {
+        this.username = username;
+        this.role = role;
     }
 
     // Callback-методы JPA lifecycle
@@ -62,7 +67,6 @@ public class Users {
     }
 
     // Геттеры и сеттеры
-
 
     public Long getId() {
         return id;
@@ -122,9 +126,9 @@ public class Users {
 
     @Override
     public final boolean equals(Object o) {
-        if (!(o instanceof Users users)) return false;
+        if (!(o instanceof AppUser appUser)) return false;
 
-        return Objects.equals(id, users.id);
+        return Objects.equals(id, appUser.id);
     }
 
     @Override
